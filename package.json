@@ -1,0 +1,19 @@
+{
+  "name": "coffeebot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./src/net.coffee",
+  "dependencies": {
+    "jasmine-node": "^1.14.5",
+    "mnist": "^1.0.5"
+  },
+  "devDependencies": {
+    "coffee-script": "^1.11.1"
+  },
+  "scripts": {
+    "start": "coffee ./src/net.coffee",
+    "test": "./node_modules/jasmine-node/bin/jasmine-node --coffee --verbose spec"
+  },
+  "author": "",
+  "license": "ISC"
+}
