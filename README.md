@@ -6,9 +6,10 @@ Coffeescript implementation of [Michael Nielsen's](http://neuralnetworksanddeepl
 ## Install
 
 1. Install [Nodejs](https://nodejs.org/en/)
-2. Then run
+2. Clone the repo
+3. Then inside the repo run
 ```
-$npm install
+$ npm install
 ```
 
 ## Usage
