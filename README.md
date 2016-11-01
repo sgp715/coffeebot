@@ -1,7 +1,7 @@
 # Coffeebot
 
 ## Description
-Simple Coffeescript of [Michael Nielsen's](http://neuralnetworksanddeeplearning.com/chap1.html) neural net tutorial, using Nodejs.
+Simple Coffeescript implementation of [Michael Nielsen's](http://neuralnetworksanddeeplearning.com/chap1.html) neural net tutorial, using Nodejs.
 
 ## Install
 
