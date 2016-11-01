@@ -7,15 +7,6 @@ describe 'network tests', () ->
     n = new Network(sizes)
 
     data = utils.load 10, 10
-    # console.log data
-
-    # digits = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-    #
-    # find_digit = (label) ->
-    #
-    #     for l, i in label
-    #         if l == 1
-    #             return digits[i]
 
     it 'simple structure test', () ->
 
@@ -30,8 +21,10 @@ describe 'network tests', () ->
         expect n.biases.length
         .toBe num_layers - 1
         for i in [1..sizes.length - 1]
-            expect n.biases[i - 1].rows
+            expect n.biases[i - 1].cols
             .toBe sizes[i]
+            expect n.biases[i - 1].rows
+            .toBe 1
 
         expect n.weights.length
         .toBe num_layers - 1
@@ -43,8 +36,11 @@ describe 'network tests', () ->
 
     it 'feedforward returns response', () ->
 
-        test_input = data.test[0]
+        test_input = [1, 1]
         test_output = n.feedforward(test_input)
 
-        expect test_input.length
-        .toBe test_output.length
+        expect test_output.rows
+        .toBe 1
+
+        expect test_output.cols
+        .toBe 1

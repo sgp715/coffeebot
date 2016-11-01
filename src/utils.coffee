@@ -1,16 +1,17 @@
 mnist = require 'mnist'
 
 sigmoid = (z) ->
-    1.0 / (1.0 + Math.exp(-z))
+    z.sigmoid()
 
 utils =
 
     load: (sample, test) ->
         mnist.set sample, test
 
-    sigmoid: sigmoid
-
-    sigmoid_prime: (z) ->
-        sigmoid(z) * (1 - sigmoid(z))
+    # sigmoid_prime: (z) ->
+    #     rows = z.rows
+    #     cols = z.cols
+    #     ones = Matrix.zero rows, cols
+    #     (sigmoid z).mul ones.minus sigmoid z
 
 module.exports = utils
