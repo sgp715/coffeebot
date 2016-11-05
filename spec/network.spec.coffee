@@ -1,5 +1,7 @@
 Network = require '../src/network.coffee'
 utils = require '../src/utils.coffee'
+la = new (require 'linear-algebra')
+Matrix = la.Matrix
 
 describe 'network tests', () ->
 
@@ -7,6 +9,8 @@ describe 'network tests', () ->
     n = new Network(sizes)
 
     data = utils.load 10, 10
+
+    n1 =  new Network([784, 2, 1])
 
     it 'simple structure test', () ->
 
@@ -34,13 +38,8 @@ describe 'network tests', () ->
             expect n.weights[i].cols
             .toBe sizes[i + 1]
 
-    it 'feedforward returns response', () ->
+    it 'sgd should cycle through data', () ->
 
-        test_input = [1, 1]
-        test_output = n.feedforward(test_input)
+        n1.SGD(data.training, 2, 2, 3)
 
-        expect test_output.rows
-        .toBe 1
-
-        expect test_output.cols
-        .toBe 1
+        console.log n1.evaluate(data.test)
