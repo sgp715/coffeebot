@@ -6,7 +6,7 @@ Coffeescript implementation of Michael Nielsen's [neural net tutorial](http://ne
 ## Install
 
 1. Install [Nodejs](https://nodejs.org/en/)
-2. Clone the repo
+2. Clone the repo -> https://github.com/sgp715/coffeebot.git
 3. Then inside the repo run
 ```
 $ npm install
