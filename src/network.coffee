@@ -42,7 +42,7 @@ class Network
                 biases_and_weights = this.update_mini_batch(mini_batch, eta)
 
 
-            console.log 'Epoch ' + e + ' completed.'
+            console.log 'Epoch ' + e + ' completed'
 
                 # TODO: continually print progress
 
@@ -67,8 +67,11 @@ class Network
             coefficient = (eta / mini_batch.length)
             coefficient * v
 
-        @biases = [@biases[i].minus (new_weights[i].map calculate_change) for i in [0..@biases.length - 1]]
-        @weights = [@weights[i].minus (new_biases[i].map calculate_change)  for i in [0..@weights.length - 1]]
+        for i in [0..@biases.length - 1]
+            @biases[i] = @biases[i].minus (new_biases[i].map calculate_change)
+
+        for i in [0..@weights.length - 1]
+             @weights[i] = @weights[i].minus (new_weights[i].map calculate_change)
 
     backprop: (x, y) ->
 
@@ -79,6 +82,7 @@ class Network
         output = new Matrix y
 
         # TODO: assert same number of w as b
+
         for i in [0..@weights.length - 1]
 
             z = (activation.dot @weights[i]).plus @biases[i]
@@ -95,17 +99,16 @@ class Network
         backprop_w = []
         backprop_w.push Matrix.zero w.rows, w.cols for w in @weights
 
-        backprop_b[backprop_b.length - 1] = delta
-        backprop_w[backprop_w.length - 1] = delta.trans().dot activations[activations.length - 2]
-
-        for l in [2..@num_layers - 1]
-
-            z = zs[zs.length - l]
+        for L in [2..@num_layers - 1]
+            z = zs[zs.length - L]
             sp = sigmoid_prime(z).trans()
-
-            delta = ((@weights[@weights.length - l + 1].dot delta.trans()).mul sp).trans()
-            backprop_b[backprop_b.length - l] = delta
-            backprop_w[backprop_w.length - l] = activations[activations.length - l - 1].dot delta.trans()
+            delta = ((@weights[@weights.length - L + 1].dot delta.trans()).mul sp).trans()
+            # console.log backprop_b[backprop_b.length - L].rows
+            # console.log backprop_b[backprop_b.length - L].cols
+            backprop_b[backprop_b.length - L] = delta
+            # console.log backprop_b[backprop_b.length - L].rows
+            # console.log backprop_b[backprop_b.length - L].cols
+            # backprop_w[backprop_w.length - L] = delta.dot activations[activations.length - L - 1]
 
         { 'biases': backprop_b, 'weights': backprop_w }
 
