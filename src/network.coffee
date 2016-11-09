@@ -29,6 +29,7 @@ class Network
     SGD: (training_data, epochs, mini_batch_size, eta, test_data = null) ->
 
         n = training_data.length
+        console.log 'Starting to training...'
         for e in [1..epochs]
 
             utils.shuffle(training_data)
@@ -36,16 +37,14 @@ class Network
             mini_batches = []
             mini_batches.push(training_data.slice k, k + mini_batch_size) for k in [0..n - 1] by mini_batch_size
 
-            console.log 'Starting to train...'
+            console.log 'Starting epoch' + e + '\n'
 
             for mini_batch in mini_batches
                 biases_and_weights = this.update_mini_batch(mini_batch, eta)
 
-
             console.log 'Epoch ' + e + ' completed'
-
-                # TODO: continually print progress
-
+            if test_data != null
+                console.log 'Accuracy at ' + this.evaluate(test_data) + '%'
 
     update_mini_batch: (mini_batch, eta) ->
 
@@ -128,6 +127,9 @@ class Network
             if expected == actual
                 correct += 1
             total += 1
+
+        console.log correct
+        console.log total
 
         (correct / total) * 100
 
