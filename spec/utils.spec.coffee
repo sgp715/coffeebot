@@ -39,6 +39,29 @@ describe 'utils tests', () ->
                 console.log 'shuffled arrays did not contain same'
                 expect 1
                 .toBe 0
+
+    it 'max works', () ->
+
+        a = []
+        expect utils.max(a)
+        .toBe 0
+
+        a = [1]
+        expect utils.max(a)
+        .toBe 0
+
+        a = [.1, .2, .3, .4]
+        expect utils.max(a)
+        .toBe 3
+
+        a = [.1, .2, .3, .0]
+        expect utils.max(a)
+        .toBe 2
+
+        a = [.5, .2, .1, 0]
+        expect utils.max(a)
+        .toBe 0
+
 #
 #     # sigmoid
 #     it 'when sigmoid is passed -1 return 0.2689414213699951', () ->

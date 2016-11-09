@@ -16,9 +16,11 @@ class Network
 
     feedforward: (a) ->
 
-        activations = new a
+        activations = new Matrix a
 
         for i in [0..@weights.length - 1]
+            #console.log 'activations'
+            #console.log activations
             activations = ((activations.dot @weights[i]).plus @biases[i]).sigmoid()
 
         activations
@@ -31,23 +33,81 @@ class Network
 
             utils.shuffle(training_data)
 
-            mini_batches = [(training_data.slice k, k + mini_batch_size) for k in [0..n - 1] by 2]
+            mini_batches = []
+            mini_batches.push(training_data.slice k, k + mini_batch_size) for k in [0..n - 1] by mini_batch_size
+
+            console.log 'Starting to train...'
 
             for mini_batch in mini_batches
-                update_mini_batch(mini_batch, eta)
-                console.log 'Epoch ' + e + ' completed.'
+                biases_and_weights = this.update_mini_batch(mini_batch, eta)
+
+
+            console.log 'Epoch ' + e + ' completed.'
 
                 # TODO: continually print progress
 
 
-    update_mini_batch = (mini_batch, eta) ->
-        console.log 'implement update mini batch'
-        backprop()
+    update_mini_batch: (mini_batch, eta) ->
 
+        new_biases = []
+        new_biases.push Matrix.zero b.rows, b.cols for b in @biases
+        new_weights = []
+        new_weights.push Matrix.zero w.rows, w.cols for w in @weights
+        #console.log new_weights
 
-    backprop = (x, y) ->
-        console.log 'implement backprop'
+        for data in mini_batch
 
+            w_n_b = this.backprop(data.input, data.output)
+            biases_deltas = w_n_b.biases
+            (new_biases[i].plus biases_deltas[i]) for i in [0..@biases.length - 1]
+            weight_deltas = w_n_b.weights
+            (new_weights[i].plus weight_deltas[i]) for i in [0..@weights.length - 1]
+
+        calculate_change = (v) ->
+            coefficient = (eta / mini_batch.length)
+            coefficient * v
+
+        @biases = [@biases[i].minus (new_weights[i].map calculate_change) for i in [0..@biases.length - 1]]
+        @weights = [@weights[i].minus (new_biases[i].map calculate_change)  for i in [0..@weights.length - 1]]
+
+    backprop: (x, y) ->
+
+        # holds the activations at each layer
+        activation = new Matrix x
+        activations = [activation]
+        zs = []
+        output = new Matrix y
+
+        # TODO: assert same number of w as b
+        for i in [0..@weights.length - 1]
+
+            z = (activation.dot @weights[i]).plus @biases[i]
+            zs.push z
+            activation = (z).sigmoid()
+            activations.push activation
+
+        output_activations = activations[activations.length - 1]
+        output_zs = zs[zs.length - 1]
+        delta = calculate_delta(output_activations, output, output_zs)
+
+        backprop_b = []
+        backprop_b.push Matrix.zero b.rows, b.cols for b in @biases
+        backprop_w = []
+        backprop_w.push Matrix.zero w.rows, w.cols for w in @weights
+
+        backprop_b[backprop_b.length - 1] = delta
+        backprop_w[backprop_w.length - 1] = delta.trans().dot activations[activations.length - 2]
+
+        for l in [2..@num_layers - 1]
+
+            z = zs[zs.length - l]
+            sp = sigmoid_prime(z).trans()
+
+            delta = ((@weights[@weights.length - l + 1].dot delta.trans()).mul sp).trans()
+            backprop_b[backprop_b.length - l] = delta
+            backprop_w[backprop_w.length - l] = activations[activations.length - l - 1].dot delta.trans()
+
+        { 'biases': backprop_b, 'weights': backprop_w }
 
     evaluate: (test_data) ->
 
@@ -56,21 +116,32 @@ class Network
 
         for d in test_data
 
-            expected = Math.max.apply null, d.output
-            actual = Math.max.apply null, d.input
+            expected = utils.max d.output
+            actual = utils.max (this.feedforward d.input).toArray()[0]
 
-            console.log 'e' + expected
-            console.log 'a' + actual
+            # console.log actual
+            # console.log expected
+
             if expected == actual
                 correct += 1
             total += 1
 
-        return (correct / total) * 100
+        (correct / total) * 100
+
+    sigmoid_prime = (z) ->
+
+        ones = (Matrix.zero z.rows, z.cols).plusEach 1
+        sigmoid_minus = ones.minus z.sigmoid()
+        z.sigmoid().mul sigmoid_minus
 
 
-    cost_derivative = () ->
+    calculate_delta = (output_activations, output, output_zs) ->
 
-        console.log 'implement cost function'
+        delta = (output_activations.minus output).mul(sigmoid_prime output_zs)
+
+    # cost_derivative: () ->
+    #
+    #     console.log 'implement cost function'
 
 
 

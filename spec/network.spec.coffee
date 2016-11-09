@@ -8,9 +8,9 @@ describe 'network tests', () ->
     sizes = [2, 3, 1]
     n = new Network(sizes)
 
-    data = utils.load 10, 10
+    data = utils.load 1000, 100
 
-    n1 =  new Network([784, 2, 1])
+    n1 =  new Network([784, 60, 30, 10])
 
     it 'simple structure test', () ->
 
@@ -42,4 +42,4 @@ describe 'network tests', () ->
 
         n1.SGD(data.training, 2, 2, 3)
 
-        console.log n1.evaluate(data.test)
+        console.log 'Classified ' + (n1.evaluate data.test) + '% correctly!?'

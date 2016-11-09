@@ -31,5 +31,21 @@ utils =
             a[i] = r_val
 
 
+    max: (array) ->
+
+        index = null
+
+        for i in [0..array.length - 1]
+
+            if index == null
+                index = i
+                continue
+
+            if array[index] < array[i]
+                index = i
+
+        index
+
+
 
 module.exports = utils
