@@ -108,7 +108,7 @@ class Network
             backprop_b[backprop_b.length - L] = delta
             # console.log backprop_b[backprop_b.length - L].rows
             # console.log backprop_b[backprop_b.length - L].cols
-            # backprop_w[backprop_w.length - L] = delta.dot activations[activations.length - L - 1]
+            backprop_w[backprop_w.length - L] = (delta.trans().dot activations[activations.length - L - 1]).trans()
 
         { 'biases': backprop_b, 'weights': backprop_w }
 
