@@ -1,7 +1,7 @@
 # Coffeebot
 
 ## Description
-Coffeescript implementation of Michael Nielsen's [neural net tutorial](http://neuralnetworksanddeeplearning.com/chap1.html) , using Nodejs.
+Coffeescript implementation of Michael Nielsen's [neural net tutorial](http://neuralnetworksanddeeplearning.com/chap1.html) , using Nodejs. The code itself is a neural network implementation. But, I have included examples and utilities that make it easy to learn from the MNIST database. The database contains labeled data of handwritten digits represented by black and white images. So, you can train the network to take in pixel data and output which digit it believes that image contains!
 
 ## Install
 
