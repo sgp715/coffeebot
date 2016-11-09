@@ -8,7 +8,7 @@ describe 'network tests', () ->
     sizes = [2, 3, 1]
     n = new Network(sizes)
 
-    data = utils.load 8000, 2000
+    data = utils.load 10000, 2000
 
     n1 =  new Network([784, 30, 10])
 
@@ -40,12 +40,15 @@ describe 'network tests', () ->
 
     it 'sgd should cycle through data', () ->
 
-        n1.SGD(data.training, 30, 10, 3, data.test.slice 1500, data.test.length)
+        n1.SGD(data.training, 30, 10, 3, (data.test.slice Math.floor(data.test.length * (2 / 5)), \
+                                                         Math.floor(data.test.length)))
 
-        accuracy = n1.evaluate data.test.slice 0, 1500
+        accuracy = n1.evaluate data.test.slice Math.floor(data.test.length * (2 / 5)), \
+                                               Math.floor(data.test.length * (4 / 5))
         console.log 'Classified ' + accuracy + '% correctly!?'
 
-        if accuracy < 90
+        # check that it roughly worked
+        if accuracy < 80
 
             expect 1
             .toBe 0

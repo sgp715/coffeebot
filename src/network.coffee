@@ -37,14 +37,14 @@ class Network
             mini_batches = []
             mini_batches.push(training_data.slice k, k + mini_batch_size) for k in [0..n - 1] by mini_batch_size
 
-            console.log 'Starting epoch' + e + '\n'
-
+            console.log '\nStarting epoch ' + e
             for mini_batch in mini_batches
-                biases_and_weights = this.update_mini_batch(mini_batch, eta)
+                this.update_mini_batch(mini_batch, eta)
 
-            console.log 'Epoch ' + e + ' completed'
             if test_data != null
                 console.log 'Accuracy at ' + this.evaluate(test_data) + '%'
+
+            console.log 'Epoch ' + e + ' completed'
 
     update_mini_batch: (mini_batch, eta) ->
 
@@ -52,15 +52,16 @@ class Network
         new_biases.push Matrix.zero b.rows, b.cols for b in @biases
         new_weights = []
         new_weights.push Matrix.zero w.rows, w.cols for w in @weights
-        #console.log new_weights
 
         for data in mini_batch
 
             w_n_b = this.backprop(data.input, data.output)
             biases_deltas = w_n_b.biases
-            (new_biases[i].plus biases_deltas[i]) for i in [0..@biases.length - 1]
+            for i in [0..@biases.length - 1]
+                new_biases[i] = new_biases[i].plus biases_deltas[i]
             weight_deltas = w_n_b.weights
-            (new_weights[i].plus weight_deltas[i]) for i in [0..@weights.length - 1]
+            for i in [0..@weights.length - 1]
+                new_weights[i] = new_weights[i].plus weight_deltas[i]
 
         calculate_change = (v) ->
             coefficient = (eta / mini_batch.length)
@@ -81,7 +82,6 @@ class Network
         output = new Matrix y
 
         # TODO: assert same number of w as b
-
         for i in [0..@weights.length - 1]
 
             z = (activation.dot @weights[i]).plus @biases[i]
@@ -102,11 +102,7 @@ class Network
             z = zs[zs.length - L]
             sp = sigmoid_prime(z).trans()
             delta = ((@weights[@weights.length - L + 1].dot delta.trans()).mul sp).trans()
-            # console.log backprop_b[backprop_b.length - L].rows
-            # console.log backprop_b[backprop_b.length - L].cols
             backprop_b[backprop_b.length - L] = delta
-            # console.log backprop_b[backprop_b.length - L].rows
-            # console.log backprop_b[backprop_b.length - L].cols
             backprop_w[backprop_w.length - L] = (delta.trans().dot activations[activations.length - L - 1]).trans()
 
         { 'biases': backprop_b, 'weights': backprop_w }
@@ -127,9 +123,6 @@ class Network
             if expected == actual
                 correct += 1
             total += 1
-
-        console.log correct
-        console.log total
 
         (correct / total) * 100
 
